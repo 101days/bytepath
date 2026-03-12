@@ -1,3 +1,5 @@
+Object = require "libs/classic/classic"
+
 function love.load()
 
 end

@@ -4,14 +4,16 @@ function love.load()
     local objects_files = {}
     recursive_enumerate("objects", objects_files)
     require_files(objects_files)
+
+    c = circle(400, 300, 50)
 end
 
 function love.update(dt)
-
+    c:update(dt)
 end
 
 function love.draw()
-
+    c:draw()
 end
 
 function require_files(files)

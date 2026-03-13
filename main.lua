@@ -1,7 +1,9 @@
-Object = require "libs/classic/classic"
+object = require "libs/classic/classic"
 
 function love.load()
-
+    local objects_files = {}
+    recursive_enumerate("objects", objects_files)
+    require_files(objects_files)
 end
 
 function love.update(dt)
@@ -10,6 +12,24 @@ end
 
 function love.draw()
 
+end
+
+function require_files(files)
+    for _, file in ipairs(files) do
+        require(file:sub(1, -5))
+    end
+end
+
+function recursive_enumerate(folder, file_list)
+    for _, item in ipairs(love.filesystem.getDirectoryItems(folder)) do
+        local path = folder .. "/" .. item
+        local info = love.filesystem.getInfo(path)
+        if info.type == "file" then
+            table.insert(file_list, path)
+        elseif info.type == "directory" then
+            recursive_enumerate(path, file_list)
+        end
+    end
 end
 
 function love.run()

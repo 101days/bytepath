@@ -6,14 +6,17 @@ function love.load()
     require_files(objects_files)
 
     c = circle(400, 300, 50)
+    hc = hyper_circle(400, 300, 50, 10, 120)
 end
 
 function love.update(dt)
     c:update(dt)
+    hc:update(dt)
 end
 
 function love.draw()
     c:draw()
+    hc:draw()
 end
 
 function require_files(files)

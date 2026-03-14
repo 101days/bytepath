@@ -155,7 +155,7 @@ function Input:sequence(...)
     end
 end
 
-local key_to_button = { mouse1 = '1', mouse2 = '2', mouse3 = '3', mouse4 = '4', mouse5 = '5' }
+local key_to_button = { mouse1 = 1, mouse2 = 2, mouse3 = 3, mouse4 = 4, mouse5 = 5 }
 local gamepad_to_button = {
     fdown = 'a',
     fup = 'y',
@@ -197,7 +197,10 @@ function Input:down(action, interval, delay)
         end
     elseif action and not interval and not delay then
         for _, key in ipairs(self.binds[action]) do
-            if (love.keyboard.isDown(key) or love.mouse.isDown(key_to_button[key] or 0)) then
+            local btn = key_to_button[key]
+            if btn then
+                if love.mouse.isDown(btn) then return true end
+            elseif love.keyboard.isDown(key) then
                 return true
             end
 

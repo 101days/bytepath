@@ -1,15 +1,23 @@
 object = require "libs/classic/classic"
+input_handler = require "libs/input/Input"
 
 function love.load()
     local objects_files = {}
     recursive_enumerate("objects", objects_files)
     require_files(objects_files)
 
+    input = input_handler()
+    input:bind('mouse1', 'test')
+
     c = circle(400, 300, 50)
     hc = hyper_circle(400, 300, 50, 10, 120)
 end
 
 function love.update(dt)
+    if input:pressed('test') then print('pressed') end
+    if input:released('test') then print('released') end
+    if input:down('test') then print('down') end
+
     c:update(dt)
     hc:update(dt)
 end

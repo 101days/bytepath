@@ -1,5 +1,5 @@
 --[[
-Copyright (c) 2018 SSYGEN
+Copyright (c) 2018 SSYGEN (Modified for LÖVE 11+ compatibility)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ Input.all_keys = {
     "f20", "f21", "f22", "f23", "f24", "execute", "help", "menu", "select", "stop", "again", "undo", "cut", "copy",
     "paste", "find", "mute", "volumeup", "volumedown",
     "alterase", "sysreq", "cancel", "clear", "prior", "return2", "separator", "out", "oper", "clearagain",
-    "thsousandsseparator", "decimalseparator", "currencyunit",
+    "thsousandsseparator", "thousandsseparator", "decimalseparator", "currencyunit",
     "currencysubunit", "lctrl", "lshift", "lalt", "lgui", "rctrl", "rshift", "ralt", "rgui", "mode", "audionext",
     "audioprev", "audiostop", "audioplay", "audiomute",
     "mediaselect", "brightnessdown", "brightnessup", "displayswitch", "kbdillumtoggle", "kbdillumdown", "kbdillumup",
@@ -57,9 +57,6 @@ function Input.new()
     self.functions = {}
     self.repeat_state = {}
     self.sequences = {}
-
-    -- Gamepads... currently only supports 1 gamepad, adding support for more is not that hard, just lazy.
-    self.joysticks = love.joystick.getJoysticks()
 
     -- Register callbacks automagically
     local callbacks = { 'keypressed', 'keyreleased', 'mousepressed', 'mousereleased', 'gamepadpressed', 'gamepadreleased',
@@ -173,8 +170,15 @@ local gamepad_to_button = {
     dpleft = 'dpleft',
     dpright = 'dpright'
 }
-local axis_to_button = { leftx = 'leftx', lefty = 'lefty', rightx = 'rightx', righty = 'righty', l2 = 'triggerleft', r2 =
-'triggerright' }
+local axis_to_button = {
+    leftx = 'leftx',
+    lefty = 'lefty',
+    rightx = 'rightx',
+    righty = 'righty',
+    l2 = 'triggerleft',
+    r2 =
+    'triggerright'
+}
 
 function Input:down(action, interval, delay)
     if action and delay and interval then
@@ -197,22 +201,21 @@ function Input:down(action, interval, delay)
         end
     elseif action and not interval and not delay then
         for _, key in ipairs(self.binds[action]) do
-            local btn = key_to_button[key]
-            if btn then
-                if love.mouse.isDown(btn) then return true end
-            elseif love.keyboard.isDown(key) then
-                return true
-            end
-
-            -- Supports only 1 gamepad, add more later...
-            if self.joysticks[1] then
-                if axis_to_button[key] then
-                    return self.state[key]
-                elseif gamepad_to_button[key] then
-                    if self.joysticks[1]:isGamepadDown(gamepad_to_button[key]) then
-                        return true
-                    end
+            if key_to_button[key] then
+                if love.mouse.isDown(key_to_button[key]) then return true end
+            elseif key == 'wheelup' or key == 'wheeldown' then
+                if self.state[key] then return true end
+            elseif gamepad_to_button[key] then
+                local joysticks = love.joystick.getJoysticks()
+                if joysticks[1] and joysticks[1]:isGamepadDown(gamepad_to_button[key]) then return true end
+            elseif axis_to_button[key] then
+                local val = self.state[key]
+                if type(val) == "number" and math.abs(val) > 0.01 then
+                    return val
                 end
+            else
+                local ok, isDown = pcall(love.keyboard.isDown, key)
+                if ok and isDown then return true end
             end
         end
     end
@@ -291,12 +294,16 @@ local button_to_key = {
 }
 
 function Input:mousepressed(x, y, button)
-    self.state[button_to_key[button]] = true
+    if button_to_key[button] then
+        self.state[button_to_key[button]] = true
+    end
 end
 
 function Input:mousereleased(x, y, button)
-    self.state[button_to_key[button]] = false
-    self.repeat_state[button_to_key[button]] = false
+    if button_to_key[button] then
+        self.state[button_to_key[button]] = false
+        self.repeat_state[button_to_key[button]] = false
+    end
 end
 
 function Input:wheelmoved(x, y)
@@ -326,19 +333,32 @@ local button_to_gamepad = {
 }
 
 function Input:gamepadpressed(joystick, button)
-    self.state[button_to_gamepad[button]] = true
+    if button_to_gamepad[button] then
+        self.state[button_to_gamepad[button]] = true
+    end
 end
 
 function Input:gamepadreleased(joystick, button)
-    self.state[button_to_gamepad[button]] = false
-    self.repeat_state[button_to_gamepad[button]] = false
+    if button_to_gamepad[button] then
+        self.state[button_to_gamepad[button]] = false
+        self.repeat_state[button_to_gamepad[button]] = false
+    end
 end
 
-local button_to_axis = { leftx = 'leftx', lefty = 'lefty', rightx = 'rightx', righty = 'righty', triggerleft = 'l2', triggerright =
-'r2' }
+local button_to_axis = {
+    leftx = 'leftx',
+    lefty = 'lefty',
+    rightx = 'rightx',
+    righty = 'righty',
+    triggerleft = 'l2',
+    triggerright =
+    'r2'
+}
 
 function Input:gamepadaxis(joystick, axis, newvalue)
-    self.state[button_to_axis[axis]] = newvalue
+    if button_to_axis[axis] then
+        self.state[button_to_axis[axis]] = newvalue
+    end
 end
 
 return setmetatable({}, { __call = function(_, ...) return Input.new(...) end })

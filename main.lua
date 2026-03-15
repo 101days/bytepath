@@ -1,6 +1,6 @@
 object = require "libs/classic/classic"
 input_handler = require "libs/input/Input"
-timer_handler = require "libs/timer/Timer"
+enhanced_timer = require "libs/enhanced_timer/enhanced_timer"
 
 function love.load()
     local objects_files = {}
@@ -8,7 +8,30 @@ function love.load()
     require_files(objects_files)
 
     input = input_handler()
-    timer = timer_handler()
+    timer = enhanced_timer()
+
+    -- timer:after(2, function()
+    --     print(love.math.random())
+    --     timer:after(1, function()
+    --         print(love.math.random())
+    --         timer:after(1, function()
+    --             print(love.math.random())
+    --         end)
+    --     end)
+    -- end)
+    -- timer:every(1, function() print(love.math.random()) end, 5)
+    local handle = timer:after(1, function(f)
+        print(love.math.random())
+        timer:after(1, f)
+    end)
+    timer:cancel(handle)
+
+    circle = { radius = 24 }
+    timer:after(2, function()
+        timer:tween(6, circle, { radius = 96 }, 'in-out-cubic', function()
+            timer:tween(6, circle, { radius = 24 }, 'in-out-cubic')
+        end)
+    end)
 end
 
 function love.update(dt)
@@ -16,6 +39,7 @@ function love.update(dt)
 end
 
 function love.draw()
+    love.graphics.circle('fill', 400, 300, circle.radius)
 end
 
 function require_files(files)

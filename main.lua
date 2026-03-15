@@ -10,26 +10,13 @@ function love.load()
     input = input_handler()
     timer = enhanced_timer()
 
-    -- timer:after(2, function()
-    --     print(love.math.random())
-    --     timer:after(1, function()
-    --         print(love.math.random())
-    --         timer:after(1, function()
-    --             print(love.math.random())
-    --         end)
-    --     end)
-    -- end)
-    -- timer:every(1, function() print(love.math.random()) end, 5)
-    local handle = timer:after(1, function(f)
-        print(love.math.random())
-        timer:after(1, f)
-    end)
-    timer:cancel(handle)
+    rect_1 = { x = 400, y = 300, w = 50, h = 200 }
+    rect_2 = { x = 400, y = 300, w = 200, h = 50 }
 
-    circle = { radius = 24 }
-    timer:after(2, function()
-        timer:tween(6, circle, { radius = 96 }, 'in-out-cubic', function()
-            timer:tween(6, circle, { radius = 24 }, 'in-out-cubic')
+    timer:tween(1, rect_1, { w = 0 }, 'in-out-cubic', function()
+        timer:tween(1, rect_2, { h = 0 }, 'in-out-cubic', function()
+            timer:tween(2, rect_1, { w = 50 }, 'in-out-cubic')
+            timer:tween(2, rect_2, { h = 50 }, 'in-out-cubic')
         end)
     end)
 end
@@ -39,7 +26,8 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.circle('fill', 400, 300, circle.radius)
+    love.graphics.rectangle('fill', rect_1.x - rect_1.w / 2, rect_1.y - rect_1.h / 2, rect_1.w, rect_1.h)
+    love.graphics.rectangle('fill', rect_2.x - rect_2.w / 2, rect_2.y - rect_2.h / 2, rect_2.w, rect_2.h)
 end
 
 function require_files(files)

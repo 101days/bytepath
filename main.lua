@@ -10,13 +10,13 @@ function love.load()
     input = input_handler()
     timer = enhanced_timer()
 
-    rect_1 = { x = 400, y = 300, w = 50, h = 200 }
-    rect_2 = { x = 400, y = 300, w = 200, h = 50 }
+    hp_bar_bg = { x = 300, y = 300, w = 200, h = 40 }
+    hp_bar_fg = { x = 300, y = 300, w = 200, h = 40 }
 
-    timer:tween(1, rect_1, { w = 0 }, 'in-out-cubic', function()
-        timer:tween(1, rect_2, { h = 0 }, 'in-out-cubic', function()
-            timer:tween(2, rect_1, { w = 50 }, 'in-out-cubic')
-            timer:tween(2, rect_2, { h = 50 }, 'in-out-cubic')
+    input:bind('d', function()
+        timer:tween('fg', 0.5, hp_bar_fg, { w = hp_bar_fg.w - 25 }, 'in-out-cubic')
+        timer:after('bg_after', 0.25, function()
+            timer:tween('bg', 0.5, hp_bar_bg, { w = hp_bar_bg.w - 25 }, 'in-out-cubic')
         end)
     end)
 end
@@ -26,8 +26,19 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.rectangle('fill', rect_1.x - rect_1.w / 2, rect_1.y - rect_1.h / 2, rect_1.w, rect_1.h)
-    love.graphics.rectangle('fill', rect_2.x - rect_2.w / 2, rect_2.y - rect_2.h / 2, rect_2.w, rect_2.h)
+    love.graphics.setColor(222 / 255, 64 / 255, 64 / 255)
+    love.graphics.rectangle(
+        'fill',
+        hp_bar_bg.x, hp_bar_bg.y - hp_bar_bg.h / 2,
+        hp_bar_bg.w, hp_bar_bg.h
+    )
+    love.graphics.setColor(222 / 255, 96 / 255, 96 / 255)
+    love.graphics.rectangle(
+        'fill',
+        hp_bar_fg.x, hp_bar_fg.y - hp_bar_fg.h / 2,
+        hp_bar_fg.w, hp_bar_fg.h
+    )
+    love.graphics.setColor(1, 1, 1)
 end
 
 function require_files(files)

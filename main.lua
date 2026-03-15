@@ -14,9 +14,11 @@ function love.load()
     hp_bar_fg = { x = 300, y = 300, w = 200, h = 40 }
 
     input:bind('d', function()
-        timer:tween('fg', 0.5, hp_bar_fg, { w = hp_bar_fg.w - 25 }, 'in-out-cubic')
+        local target_fg = math.max(0, hp_bar_fg.w - 25)
+        timer:tween('fg', 0.5, hp_bar_fg, { w = target_fg }, 'in-out-cubic')
         timer:after('bg_after', 0.25, function()
-            timer:tween('bg', 0.5, hp_bar_bg, { w = hp_bar_bg.w - 25 }, 'in-out-cubic')
+            local target_bg = math.max(0, hp_bar_bg.w - 25)
+            timer:tween('bg', 0.5, hp_bar_bg, { w = target_bg }, 'in-out-cubic')
         end)
     end)
 end

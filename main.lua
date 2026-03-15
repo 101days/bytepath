@@ -10,8 +10,8 @@ function love.load()
     input = input_handler()
     timer = enhanced_timer()
 
-    hp_bar_bg = { x = 300, y = 300, w = 200, h = 40 }
-    hp_bar_fg = { x = 300, y = 300, w = 200, h = 40 }
+    hp_bar_bg = { x = 300, y = 100, w = 200, h = 40 }
+    hp_bar_fg = { x = 300, y = 100, w = 200, h = 40 }
 
     input:bind('d', function()
         local target_fg = math.max(0, hp_bar_fg.w - 25)
@@ -20,6 +20,16 @@ function love.load()
             local target_bg = math.max(0, hp_bar_bg.w - 25)
             timer:tween('bg', 0.5, hp_bar_bg, { w = target_bg }, 'in-out-cubic')
         end)
+    end)
+
+    circle = { radius = 24 }
+    input:bind('e', function()
+        timer:cancel('shrink')
+        timer:tween('expand', 6, circle, { radius = 96 }, 'in-out-cubic')
+    end)
+    input:bind('s', function()
+        timer:cancel('expand')
+        timer:tween('shrink', 6, circle, { radius = 24 }, 'in-out-cubic')
     end)
 end
 
@@ -31,16 +41,18 @@ function love.draw()
     love.graphics.setColor(222 / 255, 64 / 255, 64 / 255)
     love.graphics.rectangle(
         'fill',
-        hp_bar_bg.x, hp_bar_bg.y - hp_bar_bg.h / 2,
+        hp_bar_bg.x, hp_bar_bg.y,
         hp_bar_bg.w, hp_bar_bg.h
     )
     love.graphics.setColor(222 / 255, 96 / 255, 96 / 255)
     love.graphics.rectangle(
         'fill',
-        hp_bar_fg.x, hp_bar_fg.y - hp_bar_fg.h / 2,
+        hp_bar_fg.x, hp_bar_fg.y,
         hp_bar_fg.w, hp_bar_fg.h
     )
     love.graphics.setColor(1, 1, 1)
+
+    love.graphics.circle('fill', 400, 300, circle.radius)
 end
 
 function require_files(files)

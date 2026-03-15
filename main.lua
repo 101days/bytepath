@@ -1,5 +1,6 @@
 object = require "libs/classic/classic"
 input_handler = require "libs/input/Input"
+timer_handler = require "libs/timer/Timer"
 
 function love.load()
     local objects_files = {}
@@ -7,62 +8,14 @@ function love.load()
     require_files(objects_files)
 
     input = input_handler()
-    input:bind('mouse1', 'test')
-    input:bind('mouse2', function() print(love.math.random()) end)
-    input:bind('kp+', 'add') -- 小键盘 +
-    input:bind('=', 'add')   -- 主键盘 =/+ 同一键（按 + 也会触发）
-    sum = 0
-    input:bind('fleft', 'left')
-    input:bind('fright', 'right')
-    input:bind('fup', 'up')
-    input:bind('fdown', 'down')
-    input:bind('l2', 'triggerleft')
-    input:bind('r2', 'triggerright')
-    input:bind('leftx', 'left_horizontal')
-    input:bind('lefty', 'left_vertical')
-    input:bind('rightx', 'right_horizontal')
-    input:bind('righty', 'right_vertical')
-
-    c = circle(400, 300, 50)
-    hc = hyper_circle(400, 300, 50, 10, 120)
+    timer = timer_handler()
 end
 
 function love.update(dt)
-    if input:pressed('test') then print('pressed') end
-    if input:released('test') then print('released') end
-    if input:down('test', 0.5) then print('down') end
-
-    if input:down('add', 0.25) then
-        sum = sum + 1
-        print(sum)
-    end
-
-    if input:pressed('left') then print('left') end
-    if input:pressed('right') then print('right') end
-    if input:pressed('up') then print('up') end
-    if input:pressed('down') then print('down') end
-
-    local left_trigger_value = input:down('triggerleft')
-    local right_trigger_value = input:down('triggerright')
-    if left_trigger_value then print('left trigger: ' .. left_trigger_value) end
-    if right_trigger_value then print('right trigger: ' .. right_trigger_value) end
-
-    local left_stick_horizontal = input:down('left_horizontal')
-    local left_stick_vertical = input:down('left_vertical')
-    local right_stick_horizontal = input:down('right_horizontal')
-    local right_stick_vertical = input:down('right_vertical')
-    if left_stick_horizontal then print('left stick horizontal: ' .. left_stick_horizontal) end
-    if left_stick_vertical then print('left stick vertical: ' .. left_stick_vertical) end
-    if right_stick_horizontal then print('right stick horizontal: ' .. right_stick_horizontal) end
-    if right_stick_vertical then print('right stick vertical: ' .. right_stick_vertical) end
-
-    c:update(dt)
-    hc:update(dt)
+    timer:update(dt)
 end
 
 function love.draw()
-    c:draw()
-    hc:draw()
 end
 
 function require_files(files)

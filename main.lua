@@ -4,19 +4,34 @@ enhanced_timer = require "libs/enhanced_timer/enhanced_timer"
 fn = require 'libs/moses/moses'
 
 function love.load()
-    local objects_files = {}
-    recursive_enumerate("objects", objects_files)
-    require_files(objects_files)
+    local object_files = {}
+    recursive_enumerate("objects", object_files)
+    require_files(object_files)
+
+    local room_files = {}
+    recursive_enumerate("rooms", room_files)
+    require_files(room_files)
 
     input = input_handler()
     timer = enhanced_timer()
+
+    current_room = nil
+    input:bind('q', function() goto_room('circle_room') end)
+    input:bind('w', function() goto_room('rectangle_room') end)
+    input:bind('e', function() goto_room('polygon_room') end)
 end
 
 function love.update(dt)
     timer:update(dt)
+    if current_room then current_room:update(dt) end
 end
 
 function love.draw()
+    if current_room then current_room:draw() end
+end
+
+function goto_room(room_type, ...)
+    current_room = _G[room_type](...)
 end
 
 function require_files(files)

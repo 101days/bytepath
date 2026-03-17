@@ -3,6 +3,10 @@ input_handler = require "libs/input/Input"
 enhanced_timer = require "libs/enhanced_timer/enhanced_timer"
 fn = require 'libs/moses/moses'
 
+require "util"
+require "game_object"
+require "area"
+
 function love.load()
     local object_files = {}
     recursive_enumerate("objects", object_files)

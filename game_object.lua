@@ -11,7 +11,7 @@ function game_object:new(area, x, y, opts)
     self.area = area
     self.x, self.y = x, y
     self.id = uuid()
-    self.timer = timer()
+    self.timer = enhanced_timer()
     self.dead = false
 end
 

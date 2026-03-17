@@ -19,10 +19,7 @@ function love.load()
     input = input_handler()
     timer = enhanced_timer()
 
-    current_room = nil
-    input:bind('q', function() goto_room('circle_room') end)
-    input:bind('w', function() goto_room('rectangle_room') end)
-    input:bind('e', function() goto_room('polygon_room') end)
+    current_room = stage_with_area()
 end
 
 function love.update(dt)

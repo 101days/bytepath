@@ -2,10 +2,8 @@ game_object = object:extend()
 
 function game_object:new(area, x, y, opts)
     local opts = opts or {}
-    if opts then
-        for k, v in pairs(opts) do
-            self[k] = v
-        end
+    for k, v in pairs(opts) do
+        self[k] = v
     end
 
     self.area = area

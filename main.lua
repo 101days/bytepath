@@ -24,8 +24,6 @@ function love.load()
     timer = timer_handler()
     camera = camera_handler()
 
-    input:bind('s', function() camera:shake(4, 60, 1) end)
-
     current_room = nil
     goto_room('stage')
 

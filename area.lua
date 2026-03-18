@@ -6,6 +6,8 @@ function area:new(room)
 end
 
 function area:update(dt)
+    if self.world then self.world:update(dt) end
+
     for i = #self.game_objects, 1, -1 do
         local obj = self.game_objects[i]
         obj:update(dt)
@@ -14,9 +16,15 @@ function area:update(dt)
 end
 
 function area:draw()
+    if self.world then self.world:draw() end
+
     for _, obj in ipairs(self.game_objects) do
         obj:draw()
     end
+end
+
+function area:add_physics_world()
+    self.world = physics.newWorld(0, 0, true)
 end
 
 function area:add_game_object(game_object_type, x, y, opts)

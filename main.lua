@@ -3,6 +3,7 @@ input_handler = require "libs/input/Input"
 timer_handler = require "libs/enhanced_timer/enhanced_timer"
 camera_handler = require 'libs/hump/camera'
 fn = require 'libs/moses/moses'
+physics = require 'libs/windfield/windfield'
 
 require "util"
 require "game_object"
@@ -23,6 +24,9 @@ function love.load()
     input = input_handler()
     timer = timer_handler()
     camera = camera_handler()
+
+    input:bind('left', 'left')
+    input:bind('right', 'right')
 
     current_room = nil
     goto_room('stage')

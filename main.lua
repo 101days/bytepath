@@ -8,6 +8,9 @@ require "game_object"
 require "area"
 
 function love.load()
+    love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.graphics.setLineStyle('rough')
+
     local object_files = {}
     recursive_enumerate("objects", object_files)
     require_files(object_files)
@@ -18,7 +21,11 @@ function love.load()
 
     input = input_handler()
     timer = enhanced_timer()
+
     current_room = nil
+    goto_room('stage')
+
+    resize(2)
 end
 
 function love.update(dt)

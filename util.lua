@@ -19,3 +19,8 @@ function random(min, max)
 
     return love.math.random() * (max - min) + min
 end
+
+function resize(s)
+    love.window.setMode(s * gw, s * gh)
+    sx, sy = s, s
+end

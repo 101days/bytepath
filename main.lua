@@ -1,6 +1,7 @@
 object = require "libs/classic/classic"
 input_handler = require "libs/input/Input"
-enhanced_timer = require "libs/enhanced_timer/enhanced_timer"
+timer_handler = require "libs/enhanced_timer/enhanced_timer"
+camera_handler = require 'libs/hump/camera'
 fn = require 'libs/moses/moses'
 
 require "util"
@@ -20,7 +21,10 @@ function love.load()
     require_files(room_files)
 
     input = input_handler()
-    timer = enhanced_timer()
+    timer = timer_handler()
+    camera = camera_handler()
+
+    input:bind('s', function() camera:shake(4, 60, 1) end)
 
     current_room = nil
     goto_room('stage')
@@ -30,6 +34,7 @@ end
 
 function love.update(dt)
     timer:update(dt)
+    camera:update(dt)
     if current_room then current_room:update(dt) end
 end
 

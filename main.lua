@@ -18,8 +18,7 @@ function love.load()
 
     input = input_handler()
     timer = enhanced_timer()
-
-    current_room = stage_with_area()
+    current_room = nil
 end
 
 function love.update(dt)

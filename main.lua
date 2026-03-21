@@ -19,6 +19,9 @@ function love.load()
     timer = Timer()
     input = Input()
 
+    input:bind("left", "left")
+    input:bind("right", "right")
+
     current_room = nil
     gotoRoom("Stage")
 end

@@ -1,3 +1,4 @@
+-- https://github.com/rxi/lume/blob/master/lume.lua#L678
 function UUID()
     local fn = function(x)
         local r = math.random(16) - 1

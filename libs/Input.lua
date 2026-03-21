@@ -1,3 +1,4 @@
+-- https://github.com/a327ex/boipushy/blob/master/Input.lua
 local Input = Object:extend()
 
 function Input:new()

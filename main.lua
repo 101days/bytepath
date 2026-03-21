@@ -1,5 +1,6 @@
 Object = require "libs/Object"
 Timer = require "libs/Timer"
+Input = require "libs/Input"
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -13,15 +14,48 @@ function love.load()
     requireFiles(room_files)
 
     timer = Timer()
+    input = Input()
 
     circle = Circle(100, 100, 50)
     timer:after(1, function()
         timer:every(1, function() print("test") end, 3, function() print("end") end)
     end)
+
+    input:bind("space", "print")
+    input:bind("m1", "print")
 end
 
 function love.update(dt)
+    if input:pressed("print") then
+        print("pressed")
+    end
+
+    if input:released("print") then
+        print("released")
+    end
+
+    if input:down("print") then
+        print("down")
+    end
+
     timer:update(dt)
+    input:update()
+end
+
+function love.keypressed(key)
+    input:keypressed(key)
+end
+
+function love.keyreleased(key)
+    input:keyreleased(key)
+end
+
+function love.mousepressed(x, y, button)
+    input:mousepressed(button)
+end
+
+function love.mousereleased(x, y, button)
+    input:mousereleased(button)
 end
 
 function love.draw()

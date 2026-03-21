@@ -2,6 +2,9 @@ Object = require "libs/Object"
 Timer = require "libs/Timer"
 Input = require "libs/Input"
 
+require "utils"
+require "GameObject"
+
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setLineStyle('rough')
@@ -16,30 +19,23 @@ function love.load()
     timer = Timer()
     input = Input()
 
-    circle = Circle(100, 100, 50)
-    timer:after(1, function()
-        timer:every(1, function() print("test") end, 3, function() print("end") end)
-    end)
-
-    input:bind("space", "print")
-    input:bind("m1", "print")
+    current_room = nil
+    gotoRoom("Stage")
 end
 
 function love.update(dt)
-    if input:pressed("print") then
-        print("pressed")
-    end
-
-    if input:released("print") then
-        print("released")
-    end
-
-    if input:down("print") then
-        print("down")
-    end
-
     timer:update(dt)
     input:update()
+    if current_room then current_room:update(dt) end
+end
+
+function love.draw()
+    if current_room then current_room:draw() end
+end
+
+function gotoRoom(room_type, ...)
+    if current_room then current_room:destroy() end
+    current_room = _G[room_type](...)
 end
 
 function love.keypressed(key)
@@ -56,10 +52,6 @@ end
 
 function love.mousereleased(x, y, button)
     input:mousereleased(button)
-end
-
-function love.draw()
-    circle:draw()
 end
 
 function requireFiles(file_list)

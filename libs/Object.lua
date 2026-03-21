@@ -1,3 +1,4 @@
+-- https://github.com/rxi/classic/blob/master/classic.lua
 Object = {}
 Object.__index = Object
 

@@ -1,4 +1,5 @@
 Object = require "libs/Object"
+Timer = require "libs/Timer"
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -11,10 +12,16 @@ function love.load()
     recursiveEnumerate("rooms", room_files)
     requireFiles(room_files)
 
+    timer = Timer()
+
     circle = Circle(100, 100, 50)
+    timer:after(1, function()
+        timer:every(1, function() print("test") end, 3, function() print("end") end)
+    end)
 end
 
 function love.update(dt)
+    timer:update(dt)
 end
 
 function love.draw()

@@ -24,6 +24,8 @@ function love.load()
 
     current_room = nil
     gotoRoom("Stage")
+
+    resize(2)
 end
 
 function love.update(dt)
@@ -34,6 +36,11 @@ end
 
 function love.draw()
     if current_room then current_room:draw() end
+end
+
+function resize(s)
+    love.window.setMode(gw * s, gh * s)
+    sx, sy = s, s
 end
 
 function gotoRoom(room_type, ...)

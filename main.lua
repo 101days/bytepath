@@ -3,12 +3,42 @@ Object = require "libs/Object"
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setLineStyle('rough')
+
+    local object_files = {}
+    recursiveEnumerate("objects", object_files)
+    requireFiles(object_files)
+    local room_files = {}
+    recursiveEnumerate("rooms", room_files)
+    requireFiles(room_files)
+
+    circle = Circle(100, 100, 50)
 end
 
 function love.update(dt)
 end
 
 function love.draw()
+    circle:draw()
+end
+
+function requireFiles(file_list)
+    for _, file in ipairs(file_list) do
+        require(file:sub(1, -5))
+    end
+end
+
+function recursiveEnumerate(dir, file_list)
+    for _, item in ipairs(love.filesystem.getDirectoryItems(dir)) do
+        local path = dir .. "/" .. item
+        local info = love.filesystem.getInfo(path)
+        if info then
+            if info.type == "file" then
+                table.insert(file_list, path)
+            elseif info.type == "directory" then
+                recursiveEnumerate(path, file_list)
+            end
+        end
+    end
 end
 
 function love.run()

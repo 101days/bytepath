@@ -6,7 +6,7 @@ end
 
 function Object:extend()
     local cls = {}
-    for k, v in paris(self) do
+    for k, v in pairs(self) do
         if k:find("__") == 1 then
             cls[k] = v
         end
